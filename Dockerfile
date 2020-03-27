@@ -64,8 +64,6 @@ ADD *xml $HADOOP_HOME/etc/hadoop/
 
 ADD ssh_config /root/.ssh/config
 
-ADD hue.ini /opt/hue/desktop/conf
-
 ADD start-all.sh start-all.sh
 RUN chmod 777 start-all.sh
 
