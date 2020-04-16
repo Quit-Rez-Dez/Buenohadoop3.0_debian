@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:stretc
 
 ENV HADOOP_HOME /opt/hadoop
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
