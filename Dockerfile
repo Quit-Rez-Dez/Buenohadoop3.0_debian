@@ -1,6 +1,5 @@
-FROM debian:stretc
+FROM debian:stretch
 
-ENV HADOOP_HOME /opt/hadoop
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 RUN apt-get update
@@ -8,23 +7,22 @@ RUN apt-get install -y --reinstall build-essential
 RUN apt-get install -y ssh 
 RUN apt-get install -y rsync 
 RUN apt-get install -y vim 
+RUN apt-get install -y sudo 
 RUN apt-get install -y net-tools
 RUN apt-get install -y openjdk-8-jdk
-RUN apt-get install -y python2.7-dev 
 RUN apt-get install -y libxml2-dev 
 RUN apt-get install -y libkrb5-dev 
 RUN apt-get install -y libffi-dev 
 RUN apt-get install -y libssl-dev 
 RUN apt-get install -y libldap2-dev 
-RUN apt-get install -y python-lxml 
 RUN apt-get install -y libxslt1-dev 
 RUN apt-get install -y libgmp3-dev 
 RUN apt-get install -y libsasl2-dev 
-RUN apt-get install -y libsqlite3-dev  
+ 
+ENV HADOOP_HOME=/opt/hadoop
+ENV USER=root
+ENV PATH $HADOOP_HOME/bin/:$PATH
 
-
-RUN \
-    if [ ! -e /usr/bin/python ]; then ln -s /usr/bin/python2.7 /usr/bin/python; fi
 
 # If you have already downloaded the tgz, add this line OR comment it AND ...
 ADD hadoop-3.1.3.tar.gz /
@@ -37,7 +35,7 @@ RUN \
     for user in hadoop hdfs yarn mapred hue; do \
          useradd -U -M -d /opt/hadoop/ --shell /bin/bash ${user}; \
     done && \
-    for user in root hdfs yarn mapred hue; do \
+    for user in root hdfs yarn mapred ; do \
          usermod -G hadoop ${user}; \
     done && \
     echo "export JAVA_HOME=$JAVA_HOME" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh && \
@@ -67,6 +65,8 @@ ADD ssh_config /root/.ssh/config
 ADD start-all.sh start-all.sh
 RUN chmod 777 start-all.sh
 
+
 EXPOSE 8088 9870 9864 19888 8042 8888
+
 
 CMD bash start-all.sh
